@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+	<ui:composition template="/pages/template/layout2.xhtml">
+		<ui:define name="content">
+			<h:form>
+			<h:messages/>
+    			<h:panelGrid columns="2">
+    				<p:outputLabel for="agendaTitulo" value="#{msgs.agendaTitulo}"/>
+    				<p:inputText id="agendaTitulo" value="#{AgendaMB.agenda.titulo}"/>
+    				
+    				<p:outputLabel for="agendaDesc" value="#{msgs.agendaDesc}"/>
+    				<p:inputTextarea id= "agendaDesc" rows="6" cols="33" value="#{AgendaMB.agenda.descricao}"/>
+    				
+    				<p:outputLabel for="agendaDataCad" value="#{msgs.agendaDTCAD}"/>
+    				<p:inputMask id="agendaDataCad" value="#{AgendaMB.agenda.dataCadastro}" mask="99/99/9999"/>
+    				  
+    				<p:outputLabel for="agendaDataIni" value="#{msgs.agendaDTINI}"/>
+    				<p:inputMask id="agendaDataIni" value="#{AgendaMB.agenda.dataInicio}" mask="99/99/9999"/>
+    				  
+    				<p:outputLabel for="agendaDataFim" value="#{msgs.agendaDTFIM}"/>
+    				<p:inputMask id="agendaDataFim" value="#{AgendaMB.agenda.dataFim}" mask="99/99/9999"/>
+    				  
+    				<p:outputLabel for="agendaAviso" value="#{msgs.agendaAviso}"/>
+    				<p:inputText id="agendaAviso" value="#{AgendaMB.agenda.aviso}"/>
+    				
+    			</h:panelGrid>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>
