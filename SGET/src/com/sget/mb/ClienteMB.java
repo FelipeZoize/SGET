@@ -18,6 +18,8 @@ import com.sgetejb.model.Cliente;
 @ManagedBean
 @SessionScoped
 public class ClienteMB {
+	
+	public static String STAY_IN_THE_SAME_PAGE = "cliente";
 
 	@EJB
 	private ClienteDAO clienteDAO;
@@ -87,6 +89,17 @@ public class ClienteMB {
 		findAllClientes();
 		
 	}
+	
+	public String prepareFormCadastro(){
+		setCliente(null);
+		currentStateMB.setCurrentState(CurrentStateIF.ADD_STATE);
+		return STAY_IN_THE_SAME_PAGE;
+
+	}
+	public String prepareList(){
+		findAllClientes();
+		return STAY_IN_THE_SAME_PAGE;
+	}
 
 	public Cliente getCliente() {
 		if (cliente == null){
@@ -118,9 +131,5 @@ public class ClienteMB {
 	public void setCurrentStateMB(CurrentStateMB currentStateMB) {
 		this.currentStateMB = currentStateMB;
 	}
-
-//	public void mudar(){
-//		this.setCurrentState(LIST_STATE);
-//	}
 
 }

@@ -75,7 +75,7 @@ html,body{
     text-shadow: 5px 5px 15px #000000;
 }
 #infoContent{
-	height: 90%;
+	height: 96%;
 	width: 100%;
 	background-color: #20252D;
 	border-radius: 0px 0px 20px 20px;
@@ -96,6 +96,12 @@ html,body{
 }
 #resultTable{
 	max-width: 95%;
+}
+.alignCenter{
+	text-align: center;
+}
+.alignLeft{
+	text-align: left;
 }
 
 form{
@@ -219,4 +225,10 @@ btSearch{
 	font-family: cac_champagne;
 	color: black;
 	font-size: 2em;
+}
+.panelCalendar{
+	font-size: 1.1em;
+    color: #A3A3A3;
+	margin-left: 12%;
+	margin-top: 2%;
 }

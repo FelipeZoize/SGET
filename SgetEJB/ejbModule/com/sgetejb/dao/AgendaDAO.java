@@ -1,10 +1,14 @@
 package com.sgetejb.dao;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.persistence.Query;
+
+import sun.security.jca.GetInstance;
 
 import com.sgetejb.model.Agenda;
 
@@ -27,5 +31,15 @@ public class AgendaDAO extends GenericDAO<Agenda> {
 		return query.getResultList();
 	}
 	
+	public void save(Agenda agenda){
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(agenda.getDataFim());
+		calendar.add(Calendar.DAY_OF_MONTH,- agenda.getAviso());
+		
+		agenda.setDataInicio(calendar.getTime());
+		
+		agenda.setDataCadastro(new Date());
+		super.save(agenda);
+	}
 
 }

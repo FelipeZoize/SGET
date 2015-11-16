@@ -10,17 +10,32 @@
 <h:body>
 	<ui:composition template="/pages/template/crudTemplate.xhtml">
 		<ui:param name="formType" value="Clientes" />
+		<ui:define name="logo_page">
+			<div class="leftIconBox">
+				<h:graphicImage library="img" name="agenda.png" class="leftIcon"/>
+				<div class="leftIconText">
+					<h:outputText value="#{msgs.clientes}" />
+				</div>	
+				<ul>
+					<li><p:commandLink value="#{msgs.create}" action="#{clienteMB.prepareFormCadastro()}" update="mainOutputPanel" immediate="true"/></li>
+					<li><p:commandLink value="#{msgs.listar}" action="#{clienteMB.prepareList()}" update="mainOutputPanel" immediate="true"/></li>
+					<li><p:commandLink value="#{msgs.quit}" action="index?faces-redirect=true" immediate="true"/></li>
+				</ul>
+				
+			</div>
+		</ui:define>
+		
 		<ui:define name="addUpdateBlock">
 			<h:form>
 				<h:panelGrid columns="1" class="formPanelGrid">
 					<p:inputText id="clienteNome" value="#{clienteMB.cliente.nome}"
-						placeholder="Nome" class="inputText" required="true" requiredMessage="Nome, campo obrigatório"/>
+						placeholder="Nome" class="inputText" required="true" requiredMessage="#{msgs.clienteNomeRequired}"/>
 
 					<p:inputMask id="clienteCpf" value="#{clienteMB.cliente.cpf}"
-						mask="999.999.999-99" placeholder="Cpf" class="inputText" converter="convertInput"/>
+						mask="999.999.999-99" placeholder="Cpf" class="inputText" converter="convertInput" required="true" requiredMessage="#{msgs.clienteCpfRequired}"/>
 
 					<p:inputText id="clienteRg" value="#{clienteMB.cliente.rg}"
-						placeholder="Rg" class="inputText" required="true" requiredMessage="RG, campo obrigatório"/>
+						placeholder="Rg" class="inputText" required="true" requiredMessage="#{msgs.clienteRgRequired}"/>
 
 					<p:inputText id="clienteEmail" value="#{clienteMB.cliente.email}"
 						placeholder="Email" class="inputText" />
@@ -51,7 +66,7 @@
 						<h:commandButton type="reset" value="#{msgs.clean}"
 							immediate="true" class="btCancelar"
 							rendered="#{currentStateMB.addState}" />
-						<h:commandButton type="reset" value="#{msgs.cancel}"
+						<h:commandButton action="#{clienteMB.prepareList()}" update="mainOutputPanel" value="#{msgs.cancel}"
 							immediate="true" class="btCancelar"
 							rendered="#{currentStateMB.updateState}" />
 					</h:panelGrid>

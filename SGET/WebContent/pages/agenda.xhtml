@@ -16,35 +16,35 @@
 					<h:outputText value="#{msgs.agenda}" />
 				</div>	
 				<ul>
-					<li><p:commandLink value="#{msgs.create}" action="#{agendaMB.prepareFormCadastro()}" update="mainOutputPanel"/></li>
-					<li><p:commandLink value="Listar" action="#{agendaMB.prepareList()}" update="mainOutputPanel"/></li>
-					<li><p:commandLink value="#{msgs.quit}" action="index?faces-redirect=true"/></li>
+					<li><p:commandLink value="#{msgs.create}" action="#{agendaMB.prepareFormCadastro()}" update="mainOutputPanel" immediate="true"/></li>
+					<li><p:commandLink value="#{msgs.listar}" action="#{agendaMB.prepareList()}" update="mainOutputPanel" immediate="true"/></li>
+					<li><p:commandLink value="#{msgs.quit}" action="index?faces-redirect=true" immediate="true"/></li>
 				</ul>
 				
 			</div>
 		</ui:define>
+		
 		<ui:define name="addUpdateBlock">
 			<h:form>
 				<h:panelGrid columns="1" class="formPanelGrid">
 				
-					<p:inputText id="agendaTitulo" value="#{agendaMB.agenda.titulo}" placeholder="Titulo" class="inputText"/>
+					<p:inputText id="agendaTitulo" value="#{agendaMB.agenda.titulo}" placeholder="Titulo" class="inputText" required="true" requiredMessage="#{msgs.agendaTituloRequired}"/>
 
 					<p:inputTextarea id="agendaDesc" rows="6" cols="33"
-						value="#{agendaMB.agenda.descricao}" placeholder="Descrição" class="inputText"/>
-
-					<p:inputMask id="agendaDataCad"
-						value="#{agendaMB.agenda.dataCadastro}" mask="99/99/9999" placeholder="Data Cadastro" class="inputText" converter="convertInput"/>
-
-					<p:inputMask id="agendaDataIni"
-						value="#{agendaMB.agenda.dataInicio}" mask="99/99/9999" placeholder="Data Inicio" class="inputText" converter="convertInput"/>
-
-					<p:inputMask id="agendaDataFim" value="#{agendaMB.agenda.dataFim}"
-						mask="99/99/9999" placeholder="Data Fim" class="inputText" converter="convertInput" >
+						value="#{agendaMB.agenda.descricao}" placeholder="Descrição" class="inputText" required="true" requiredMessage="#{msgs.agendaDescRequired}"/>
+					
+					<!-- <p:inputMask id="agendaDataFim" value="#{agendaMB.agenda.dataFim}"
+						mask="99/99/9999" placeholder="#{msgs.agendaData}" class="inputText" converter="convertInput" >
 						<f:convertDateTime pattern="dd/MM/yyyy" />
-					</p:inputMask>
-
-					<p:inputText id="agendaAviso" value="#{agendaMB.agenda.aviso}" placeholder="Avisar com Antecedencia" class="inputText" converter="convertInput"/>
-
+					</p:inputMask> -->
+					
+					<p:calendar id="time" value="#{agendaMB.agenda.dataFim}" pattern="dd/MM/yyyy HH:mm"  placeholder="#{msgs.agendaDataHora}" class="inputText" size="40" required="true" requiredMessage="#{msgs.agendaDataRequired}"/>
+					
+					<h:panelGrid columns="2" class="panelCalendar">
+						<h:outputText value="Avisar com quantos dias de antecedência:"/>
+						<p:inputText id="agendaAviso" value="#{agendaMB.agenda.aviso}" size="1" class="inputText" converter="convertInput"/>
+					</h:panelGrid>
+					
 					<h:panelGrid columns="2" class="formPanelGrid">
 						<h:commandButton rendered="#{currentStateMB.addState}"
 							action="#{agendaMB.createAgenda()}" value="#{msgs.create}"
@@ -55,7 +55,7 @@
 						<h:commandButton type="reset" value="#{msgs.clean}"
 							immediate="true" class="btCancelar"
 							rendered="#{currentStateMB.addState}"/>
-						<h:commandButton type="reset" value="#{msgs.cancel}"
+						<h:commandButton action="#{agendaMB.prepareList()}" update="mainOutputPanel" value="#{msgs.cancel}"
 							immediate="true" class="btCancelar"
 							rendered="#{currentStateMB.updateState}" />
 					</h:panelGrid>
@@ -86,11 +86,15 @@
 					<p:column headerText="#{msgs.agendaTitulo}" resizable="false">
 						<h:outputText value="#{agenda.titulo}" sortBy="#{agenda.titulo}"/>
 					</p:column>
-					<p:column headerText="#{msgs.agendaDTFIM}" >
-						<h:outputText value="#{agenda.dataFim}" />
+					<p:column headerText="#{msgs.agendaData}" class="alignCenter">
+						<h:outputText value="#{agenda.dataFim}" >
+							<f:convertDateTime pattern="dd/MM/yyyy"/>
+						</h:outputText>
 					</p:column>
-					<p:column headerText="Hora">
-						<h:outputText value="#{agenda.dataInicio}" />
+					<p:column headerText="#{msgs.agendaHora}" class="alignCenter">
+						<h:outputText value="#{agenda.dataFim}" >
+							<f:convertDateTime pattern="HH:mm"  timeZone="GMT-3"/>
+						</h:outputText>
 					</p:column>
 					<p:column >
 						<p:commandButton styleClass="btActionTable" icon="ui-icon-pencil" title="Editar"

@@ -1,6 +1,5 @@
 package com.sgetejb.model;
 
-import java.sql.Timestamp;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -9,8 +8,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 @Entity
 @Table(name="agenda")
@@ -22,13 +19,11 @@ public class Agenda {
 	private String titulo; 
 	private String descricao;
 	private int aviso;
-	
-	@Temporal(TemporalType.TIMESTAMP)
+			
 	@Column(name="data_cadastro")
 	private Date dataCadastro;
 	
-	@Column(name="data_inicio")
-	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name="data_inicio")	
 	private Date dataInicio;
 	
 	@Column(name="data_fim")
@@ -67,7 +62,7 @@ public class Agenda {
 	public Date getDataInicio() {
 		return dataInicio;
 	}
-	public void setDataInicio(Timestamp dataInicio) {
+	public void setDataInicio(Date dataInicio) {
 		this.dataInicio = dataInicio;
 	}
 	public Date getDataFim() {
@@ -76,6 +71,5 @@ public class Agenda {
 	public void setDataFim(Date dataFim) {
 		this.dataFim = dataFim;
 	}
-	
-	
+		
 }
