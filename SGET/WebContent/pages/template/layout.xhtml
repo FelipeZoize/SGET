@@ -1,36 +1,41 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:ui="http://java.sun.com/jsf/facelets">
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
 
 
-	<h:head>
-		<h:outputStylesheet library="css" name="main.css"/>
-<!-- 		<h:outputStylesheet library="css" name="bootstrap.min.css"/>-->
- 		<title>Sistema de Gerenciamento de Estúdio de Tatuagem</title>
-	</h:head>
-	
-	<h:body>
-	
-		<div id="page">		
-						
-			<div id="pageLeftColum">
-				<div class="iconPage">
-					<ui:insert name="logo_page"/>
-				</div>	
+<h:head>
+	<h:outputStylesheet library="css" name="main.css" />
+	<!-- 		<h:outputStylesheet library="css" name="bootstrap.min.css"/>-->
+	<title>Sistema de Gestão de Estúdio de Tatuagem</title>
+</h:head>
+
+<h:body>
+
+	<div id="page">
+
+		<div id="pageLeftColum">
+			<div class="iconPage">
+				<ui:insert name="logo_page" />
 			</div>
-						
-			<div id="pageRightColum">	
-				<ui:insert name="content"/>						
-			</div>
-						
 		</div>
-		<dir id="footer">
-			<ui:insert name="footer"/>
-		</dir>
-	
-	</h:body>
-	
+
+		<div id="pageRightColum">
+			<p:messages id="messages" autoUpdate="true" styleClass="messagesBox">
+		    	<p:effect type="drop" event="load" delay="3000" />
+		    </p:messages>
+		
+			<ui:insert name="content" />
+		</div>
+
+	</div>
+	<div id="footer">
+		<div id="footerText">* Sistema de Gestão de Estúdio de Tatuagem - 2015 *</div>
+	</div>
+
+</h:body>
+
 </html>

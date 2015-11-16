@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+	<ui:composition template="/pages/template/crudTemplate.xhtml">
+		<ui:param name="formType" value="Compromissos" />
+		<ui:define name="logo_page">
+			<div class="leftIconBox">
+				<h:graphicImage library="img" name="agenda.png" class="leftIcon"/>
+				<div class="leftIconText">
+					<h:outputText value="#{msgs.agenda}" />
+				</div>	
+				<ul>
+					<li><p:commandLink value="#{msgs.create}" action="#{agendaMB.prepareFormCadastro()}" update="mainOutputPanel"/></li>
+					<li><p:commandLink value="Listar" action="#{agendaMB.prepareList()}" update="mainOutputPanel"/></li>
+					<li><p:commandLink value="#{msgs.quit}" action="index?faces-redirect=true"/></li>
+				</ul>
+				
+			</div>
+		</ui:define>
+		<ui:define name="addUpdateBlock">
+			<h:form>
+				<h:panelGrid columns="1" class="formPanelGrid">
+				
+					<p:inputText id="agendaTitulo" value="#{agendaMB.agenda.titulo}" placeholder="Titulo" class="inputText"/>
+
+					<p:inputTextarea id="agendaDesc" rows="6" cols="33"
+						value="#{agendaMB.agenda.descricao}" placeholder="Descrição" class="inputText"/>
+
+					<p:inputMask id="agendaDataCad"
+						value="#{agendaMB.agenda.dataCadastro}" mask="99/99/9999" placeholder="Data Cadastro" class="inputText" converter="convertInput"/>
+
+					<p:inputMask id="agendaDataIni"
+						value="#{agendaMB.agenda.dataInicio}" mask="99/99/9999" placeholder="Data Inicio" class="inputText" converter="convertInput"/>
+
+					<p:inputMask id="agendaDataFim" value="#{agendaMB.agenda.dataFim}"
+						mask="99/99/9999" placeholder="Data Fim" class="inputText" converter="convertInput" >
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</p:inputMask>
+
+					<p:inputText id="agendaAviso" value="#{agendaMB.agenda.aviso}" placeholder="Avisar com Antecedencia" class="inputText" converter="convertInput"/>
+
+					<h:panelGrid columns="2" class="formPanelGrid">
+						<h:commandButton rendered="#{currentStateMB.addState}"
+							action="#{agendaMB.createAgenda()}" value="#{msgs.create}"
+							class="btAddUpdate" />
+						<h:commandButton rendered="#{currentStateMB.updateState}"
+							action="#{agendaMB.updateAgenda()}" value="#{msgs.update}"
+							class="btAddUpdate" />
+						<h:commandButton type="reset" value="#{msgs.clean}"
+							immediate="true" class="btCancelar"
+							rendered="#{currentStateMB.addState}"/>
+						<h:commandButton type="reset" value="#{msgs.cancel}"
+							immediate="true" class="btCancelar"
+							rendered="#{currentStateMB.updateState}" />
+					</h:panelGrid>
+				</h:panelGrid>
+			</h:form>
+		</ui:define>		
+
+		<ui:define name="searchlistBlock">
+			<h:form id="listAgenda" class="formList">
+
+				<p:dataTable value="#{agendaMB.listAgenda}" var="agenda" resizableColumns="true"
+					id="resultTable" paginator="true" paginatorPosition="bottom"
+					rows="10"  reflow="true"  widgetVar="agendaTable"
+					emptyMessage="Nenhum Resultado Encontrado!">
+
+					<f:facet name="header">
+						<p:outputPanel>
+							<h:outputText value="Buscar na tabela:" />
+							<p:inputText id="globalFilter" 
+								value="#{agendaMB.searchParameter}" style="width:150px"
+								placeholder="Digite aqui" />
+							<p:commandButton styleClass="btSearch" icon="ui-icon-search" title="Buscar"
+								action="#{agendaMB.findAgenda()}" update="resultTable"/>
+						</p:outputPanel>
+					</f:facet>
+					<h:inputHidden value="#{agenda.id}" />
+
+					<p:column headerText="#{msgs.agendaTitulo}" resizable="false">
+						<h:outputText value="#{agenda.titulo}" sortBy="#{agenda.titulo}"/>
+					</p:column>
+					<p:column headerText="#{msgs.agendaDTFIM}" >
+						<h:outputText value="#{agenda.dataFim}" />
+					</p:column>
+					<p:column headerText="Hora">
+						<h:outputText value="#{agenda.dataInicio}" />
+					</p:column>
+					<p:column >
+						<p:commandButton styleClass="btActionTable" icon="ui-icon-pencil" title="Editar"
+							action="#{currentStateMB.prepareUpdate()}" update="mainOutputPanel">
+							<f:setPropertyActionListener value="#{agenda}"
+								target="#{agendaMB.agenda}" />
+						</p:commandButton>
+						<p:commandButton icon="ui-icon-trash" styleClass="btActionTable" title="Remover"
+							action="#{agendaMB.deleteAgenda()}" update="listAgenda">
+							<p:confirm header="Confirmação" message="Você tem certeza?"
+								icon="ui-icon-alert" />
+							<f:setPropertyActionListener value="#{agenda}"
+								target="#{agendaMB.agenda}" />
+						</p:commandButton>
+
+						<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+							<p:commandButton value="Sim" type="button"
+								styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+							<p:commandButton value="Não" type="button"
+								styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+						</p:confirmDialog>
+					</p:column>
+
+				</p:dataTable>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

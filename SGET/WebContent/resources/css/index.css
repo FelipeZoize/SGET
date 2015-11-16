@@ -1,0 +1,51 @@
+@CHARSET "UTF-8";
+
+#pageIndex{
+	background-color: #20252D;
+	height: 95%;
+	width: 100%;
+}
+.logoBox{
+	height: 100%;
+	margin-left: 10%;
+}
+.logo{
+	position: relative;
+    max-height: 135%;
+    max-width: 120%;
+    bottom: 5%;
+}
+.brushBox{
+	height: 100%;
+	margin-left: 10%;
+	width: 90%;	
+}
+.brush{
+	position: relative;
+	height: 20%;	
+	width: 90%;
+}
+.azul{
+	top: 7%;
+}
+.verde{
+	top: 3.5%;
+}
+.vermelho{
+	bottom: 4%;
+}
+.laranja{
+	bottom: 8%;
+}
+.brushImgBox{
+	height: 100%;
+}
+.brushNameBox{
+	text-shadow: 5px 5px 15px #000000;
+	height: 40%;
+	font-size: 2.7em;
+	position: absolute;
+	bottom: 10%;
+	left: 7%;
+	width: 60%;
+}

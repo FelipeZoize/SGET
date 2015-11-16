@@ -10,20 +10,25 @@
   <body>  
 	<ui:composition template="/pages/template/layout.xhtml">
     	<ui:define name="content">
+    	    	
     		<p:outputPanel deferred="true" id="mainOutputPanel"> 
     			<div id="headerContent">
-				</div>
-				
-				<h:messages />
-				
+    				<div class="headerContentText">
+						<h:outputText value="#{msgs.create}" rendered="#{currentStateMB.addState}"/>						
+						<h:outputText value="#{msgs.edit}" rendered="#{currentStateMB.updateState}"/>
+						<h:outputText value="#{msgs.list}" rendered="#{currentStateMB.listState}"/>	
+						#{formType}
+					</div>				
+				</div>			
+								
 				<div id="infoContent">
 					<!-- bloco de edição --> 
-					<p:outputPanel id="addUpdateBlock" rendered="#{clienteMB.addState or clienteMB.updateState}">
+					<p:outputPanel id="addUpdateBlock" rendered="#{currentStateMB.addState or currentStateMB.updateState}">
 						<ui:insert name="addUpdateBlock"/>
 					</p:outputPanel>
 					
 					<!-- bloco de pesquisa --> 
-					<p:outputPanel id="searchlistBlock" rendered="#{clienteMB.listState}">
+					<p:outputPanel id="searchlistBlock" rendered="#{currentStateMB.listState}">
 						<ui:insert name="searchlistBlock"/>
 					</p:outputPanel>
 					

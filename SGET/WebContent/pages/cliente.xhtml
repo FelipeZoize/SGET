@@ -9,39 +9,51 @@
 
 <h:body>
 	<ui:composition template="/pages/template/crudTemplate.xhtml">
+		<ui:param name="formType" value="Clientes" />
 		<ui:define name="addUpdateBlock">
 			<h:form>
-				<h:messages />
 				<h:panelGrid columns="1" class="formPanelGrid">
-					<p:inputText id="clienteNome" value="#{clienteMB.cliente.nome}" placeholder="Nome" class="inputText" />
-					
+					<p:inputText id="clienteNome" value="#{clienteMB.cliente.nome}"
+						placeholder="Nome" class="inputText" required="true" requiredMessage="Nome, campo obrigatório"/>
+
 					<p:inputMask id="clienteCpf" value="#{clienteMB.cliente.cpf}"
-						mask="999.999.999-99" placeholder="Cpf" class="inputText"/>
+						mask="999.999.999-99" placeholder="Cpf" class="inputText" converter="convertInput"/>
 
-					<p:inputText id="clienteRg" value="#{clienteMB.cliente.rg}" placeholder="Rg" class="inputText"/>
+					<p:inputText id="clienteRg" value="#{clienteMB.cliente.rg}"
+						placeholder="Rg" class="inputText" required="true" requiredMessage="RG, campo obrigatório"/>
 
-					<p:inputText id="clienteEmail" value="#{clienteMB.cliente.email}" placeholder="Email" class="inputText"/>
+					<p:inputText id="clienteEmail" value="#{clienteMB.cliente.email}"
+						placeholder="Email" class="inputText" />
 
 					<p:inputMask id="clienteTel" value="#{clienteMB.cliente.telefone}"
-						mask="(99) 9999-9999" placeholder="Telefone" class="inputText"/>
+						mask="(99) 9999-9999" placeholder="Telefone" class="inputText" converter="convertInput"/>
 
 					<p:inputMask id="clienteCel" value="#{clienteMB.cliente.celular}"
-						mask="(99) 9999-9999" placeholder="Celular" class="inputText"/>
+						mask="(99) 9999-9999" placeholder="Celular" class="inputText" converter="convertInput"/>
 
-					<p:inputText id="clienteBairro" value="#{clienteMB.cliente.bairro}" placeholder="Bairro" class="inputText"/>
+					<p:inputText id="clienteBairro" value="#{clienteMB.cliente.bairro}"
+						placeholder="Bairro" class="inputText" />
 
 					<p:inputMask id="clienteDataNasc"
-						value="#{clienteMB.cliente.dataNascimento}" mask="99/99/9999" placeholder="Data de Nascimento" class="inputText"/>
-
+						value="#{clienteMB.cliente.dataNascimento}" mask="99/99/9999"
+						placeholder="Data de Nascimento" class="inputText"
+						converter="convertInput">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</p:inputMask>
+					
 					<h:panelGrid columns="2" class="formPanelGrid">
-						<h:commandButton rendered="#{clienteMB.addState}"
-							action="#{clienteMB.createCliente()}" value="#{msgs.create}" class="btAddUpdate"/>
-						<h:commandButton rendered="#{clienteMB.updateState}"
-							action="#{clienteMB.updateCliente()}" value="#{msgs.update}" class="btAddUpdate"/>
+						<h:commandButton rendered="#{currentStateMB.addState}"
+							action="#{clienteMB.createCliente()}" value="#{msgs.create}"
+							class="btAddUpdate" update="mainOutputPanel" />
+						<h:commandButton rendered="#{currentStateMB.updateState}"
+							action="#{clienteMB.updateCliente()}" value="#{msgs.update}"
+							class="btAddUpdate" />
 						<h:commandButton type="reset" value="#{msgs.clean}"
-							immediate="true" class="btCancelar" rendered="#{clienteMB.addState}"/>
+							immediate="true" class="btCancelar"
+							rendered="#{currentStateMB.addState}" />
 						<h:commandButton type="reset" value="#{msgs.cancel}"
-							immediate="true" class="btCancelar" rendered="#{clienteMB.updateState}"/>
+							immediate="true" class="btCancelar"
+							rendered="#{currentStateMB.updateState}" />
 					</h:panelGrid>
 				</h:panelGrid>
 
@@ -49,40 +61,50 @@
 		</ui:define>
 
 		<ui:define name="searchlistBlock">
-			<h:form id="listClientes">
+			<h:form id="listClientes" class="formList">
 
-				<p:dataTable value="#{clienteMB.listClientes}" var="cliente" resizableColumns="true"
-					id="resultTable" paginator="true" paginatorPosition="bottom"
-					rows="10"  reflow="true"  widgetVar="clienteTable"
+				<p:dataTable value="#{clienteMB.listClientes}" var="cliente"
+					resizableColumns="true" id="resultTable" paginator="true"
+					paginatorPosition="bottom" rows="10" reflow="true"
+					widgetVar="clienteTable"
 					emptyMessage="Nenhum Resultado Encontrado!">
 
 					<f:facet name="header">
 						<p:outputPanel>
 							<h:outputText value="Buscar na tabela:" />
-							<p:inputText id="globalFilter" 
-								onkeyup="PF('clienteTable').filter()" style="width:150px"
+							<p:inputText id="globalFilter"
+								value="#{clienteMB.searchParameter}" style="width:150px"
 								placeholder="Digite aqui" />
+							<p:commandButton styleClass="btSearch" icon="ui-icon-search"
+								title="Buscar" action="#{clienteMB.findClientes()}"
+								update="resultTable" />
 						</p:outputPanel>
 					</f:facet>
 					<h:inputHidden value="#{cliente.id}" />
 
-					<p:column headerText="#{msgs.clienteNome}" resizable="false">
+					<p:column headerText="#{msgs.clienteNome}" resizable="false"
+						sortBy="#{cliente.nome}">
 						<h:outputText value="#{cliente.nome}" />
 					</p:column>
-					<p:column headerText="#{msgs.clienteCpf}" >
-						<h:outputText value="#{cliente.cpf}" />
+					
+					<p:column headerText="#{msgs.clienteCpf}">
+						<h:outputText value="#{cliente.cpf}" converter="convertInput"/>
 					</p:column>
+					
 					<p:column headerText="#{msgs.clienteCel}">
 						<h:outputText value="#{cliente.celular}" />
 					</p:column>
+					
 					<p:column width="40">
-						<p:commandButton styleClass="btActionTable" icon="ui-icon-pencil" title="Editar"
-							action="#{clienteMB.prepareUpdate()}" update="mainOutputPanel">
+						<p:commandButton styleClass="btActionTable" icon="ui-icon-pencil"
+							title="#{msgs.edit}" action="#{currentStateMB.prepareUpdate()}"
+							update="mainOutputPanel">
 							<f:setPropertyActionListener value="#{cliente}"
 								target="#{clienteMB.cliente}" />
 						</p:commandButton>
-						<p:commandButton icon="ui-icon-trash" styleClass="btActionTable" title="Remover"
-							action="#{clienteMB.deleteCliente()}" update="listClientes">
+						<p:commandButton icon="ui-icon-trash" styleClass="btActionTable"
+							title="#{msgs.remove}" action="#{clienteMB.deleteCliente()}"
+							update="listClientes">
 							<p:confirm header="Confirmação" message="Você tem certeza?"
 								icon="ui-icon-alert" />
 							<f:setPropertyActionListener value="#{cliente}"

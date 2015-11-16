@@ -22,8 +22,7 @@ public class ClienteDAO extends GenericDAO<Cliente> {
 	
 	@SuppressWarnings("unchecked")
 	public List<Cliente> findClientes(String parameterToSearch){
-		Query query = super.getEm().createQuery("select c from Cliente c where nome like :parameterToSearch  ",Cliente.class);
-		query.setParameter("parameterToSearch", parameterToSearch+"%");
+		Query query = super.getEm().createQuery("SELECT c FROM Cliente c WHERE nome LIKE :parameterToSearch ORDER BY c.nome ASC ",Cliente.class);		query.setParameter("parameterToSearch", parameterToSearch+"%");
 		return query.getResultList();
 	}
 	

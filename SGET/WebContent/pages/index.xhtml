@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<h:outputStylesheet library="css" name="main.css" />
+	<h:outputStylesheet library="css" name="index.css" />
+	<title>Sistema de Gestão de Estúdio de Tatuagem</title>
+</h:head>
+
+<h:body>
+
+	<div id="pageIndex">
+		<div id="pageLeftColum">
+			<div class="iconPage">
+				<div class="logoBox">
+					<h:graphicImage library="img" name="Delirium-logo-sem-fundo.png" class="logo"/>
+				</div>
+			</div>
+		</div>
+
+		<div id="pageRightColum">
+			<h:form class="brushBox">
+				<div class="brush azul">
+					<h:graphicImage library="img" name="pincel_azul_1.png" class="brushImgBox"/>
+					<div class="brushNameBox">
+						<h:commandLink action="cliente?faces-redirect=true" >
+							<h:outputText value="#{msgs.clientes}" styleClass="iconText" />
+						</h:commandLink>
+					</div>
+				</div>
+				
+				<div class="brush verde">					
+					<h:graphicImage library="img" name="pincel_verde_2.png" class="brushImgBox"/>
+					<div class="brushNameBox">
+						<p:commandLink>
+							<h:outputText value="#{msgs.financeiro}"  styleClass="iconText" />
+						</p:commandLink>
+					</div>
+				</div>
+				
+				<div class="brush">
+					<h:graphicImage library="img" name="pincel_amarelo_3.png" class="brushImgBox"/>
+					<div class="brushNameBox">
+						<p:commandLink action="agenda?faces-redirect=true">
+							<h:outputText value="#{msgs.agenda}"  styleClass="iconText" />
+						</p:commandLink>
+					</div>
+				</div>
+				
+				<div class="brush vermelho">
+					<h:graphicImage library="img" name="pincel_vermelho_4.png" class="brushImgBox" />
+					<div class="brushNameBox">	
+						<p:commandLink>
+							<h:outputText value="#{msgs.produtos}"  styleClass="iconText" />
+						</p:commandLink>
+					</div>
+				</div>
+				
+				<div class="brush laranja">
+					<h:graphicImage library="img" name="pincel_laranja_5.png" class="brushImgBox"/>
+					<div class="brushNameBox">	
+						<p:commandLink>
+							<h:outputText value="#{msgs.relatorios}"  styleClass="iconText" />
+						</p:commandLink>
+					</div>
+				</div>
+				
+			</h:form>
+		</div>
+	</div>
+	<div id="footer">
+		<div id="footerText">* Sistema de Gestão de Estúdio de Tatuagem - 2015 *</div>
+	</div>
+
+</h:body>
+</html>

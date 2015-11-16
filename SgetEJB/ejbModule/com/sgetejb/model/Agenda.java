@@ -32,7 +32,6 @@ public class Agenda {
 	private Date dataInicio;
 	
 	@Column(name="data_fim")
-	@Temporal(TemporalType.TIMESTAMP)
 	private Date dataFim;
 	
 	public int getId() {
@@ -74,7 +73,7 @@ public class Agenda {
 	public Date getDataFim() {
 		return dataFim;
 	}
-	public void setDataFim(Timestamp dataFim) {
+	public void setDataFim(Date dataFim) {
 		this.dataFim = dataFim;
 	}
 	

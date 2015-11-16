@@ -1,18 +1,17 @@
 package com.sget.mb;
 
-import java.io.IOException;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
 
+import com.sget.utils.CurrentStateIF;
+import com.sget.utils.CurrentStateMB;
+import com.sget.utils.JSFMessageUtil;
 import com.sgetejb.dao.ClienteDAO;
 import com.sgetejb.model.Cliente;
 
@@ -22,36 +21,31 @@ public class ClienteMB {
 
 	@EJB
 	private ClienteDAO clienteDAO;
-
-	private static final String ADD_STATE = "adicionar";
-	private static final String UPDATE_STATE = "atualizar";
-	private static final String LIST_STATE = "listar";
 	
-	private static final String STAY_IN_THE_SAME_PAGE = null;
-	private static final String FORM_CLIENTE = "createCliente";
-
-	/** diz qual o estado da pagina **/
-	private String currentState = ADD_STATE;  	
-
+	@ManagedProperty( value = "#{currentStateMB}")
+	private CurrentStateMB currentStateMB;
+	
+	private JSFMessageUtil jsfMessageUtil = new JSFMessageUtil();
 	private Cliente cliente;
-	private List<Cliente> listClientes;
+	private List<Cliente> listClientes;	
 
 	/** parametros para busca de clientes **/
 	private String searchParameter;
 
 	@PostConstruct	
 	public void init(){
+		//currentStateMB.setCurrentState(CurrentStateIF.ADD_STATE);
 		//listClientes = clienteDAO.findAll();
 	}	
-
+	
 	public void createCliente(){
 		try {
 			clienteDAO.save(cliente);
 		} catch (EJBException e) {
-			sendErrorMessageToUser("Erro, verificar se todos os campos estão corretos!");			
+			jsfMessageUtil.sendErrorMessageToUser("Erro, verificar se todos os campos estão corretos!");			
 		}
 
-		sendInfoMessageToUser("Operação Realizada com Sucesso");
+		jsfMessageUtil.sendInfoMessageToUser("Operação Realizada com Sucesso");
 
 		this.setCliente(null);
 
@@ -62,20 +56,20 @@ public class ClienteMB {
 		try {
 			clienteDAO.update(cliente);
 		} catch (EJBException e) {
-			sendErrorMessageToUser("Erro, verificar se todos os campos estão corretos!");
+			jsfMessageUtil.sendErrorMessageToUser("Erro, verificar se todos os campos estão corretos!");
 		}
 
-		sendInfoMessageToUser("Operação Realizada com Sucesso");
-
-		//cliente = null;
-		this.setCurrentState(ADD_STATE);
-
+		jsfMessageUtil.sendInfoMessageToUser("Operação Realizada com Sucesso");
+		
+		currentStateMB.setCurrentState(CurrentStateIF.ADD_STATE);
+		
 		findAllClientes();
 	}
 
-	public void findAllClientes(){
-		this.setCurrentState(LIST_STATE);
+	public void findAllClientes(){		
 		this.setListClientes(clienteDAO.findAll());
+		
+		currentStateMB.setCurrentState(CurrentStateIF.LIST_STATE);
 	}
 
 	public void findClientes(){
@@ -86,31 +80,12 @@ public class ClienteMB {
 		try {
 			clienteDAO.delete(cliente);
 		} catch (EJBException e) {
-			sendErrorMessageToUser("Erro ao deletar o cliente!");
-
+			jsfMessageUtil.sendErrorMessageToUser("Erro ao deletar o cliente!");
 		}
 
-		sendInfoMessageToUser("Operação Realizada com Sucesso");
+		jsfMessageUtil.sendInfoMessageToUser("Operação Realizada com Sucesso");
 		findAllClientes();
 		
-	}
-
-	public void prepareUpdate(){
-		this.setCurrentState(UPDATE_STATE);
-	}
-
-	public void sendInfoMessageToUser(String message){
-		FacesContext context = getContext();
-		context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,message,message));
-	}
-	public void sendErrorMessageToUser(String message){
-		FacesContext context = getContext();
-		context.addMessage(null, new FacesMessage (FacesMessage.SEVERITY_ERROR, message, message));
-	}
-
-	public FacesContext getContext(){
-		FacesContext context = FacesContext.getCurrentInstance();
-		return context;
 	}
 
 	public Cliente getCliente() {
@@ -140,25 +115,12 @@ public class ClienteMB {
 		this.searchParameter = searchParameter;
 	}
 
-	public boolean isAddState() {  
-		return ADD_STATE.equals(this.getCurrentState());  
-	}  
-	public boolean isUpdateState() {  
-		return UPDATE_STATE.equals(this.getCurrentState());  
-	}
-	public boolean isListState() {  
-		return LIST_STATE.equals(this.getCurrentState());  
-	}
-	
-	public String getCurrentState() {
-		return currentState;
+	public void setCurrentStateMB(CurrentStateMB currentStateMB) {
+		this.currentStateMB = currentStateMB;
 	}
 
-	public void setCurrentState(String currentState) {
-		this.currentState = currentState;
-	}
-	public void mudar(){
-		this.setCurrentState(LIST_STATE);
-	}
+//	public void mudar(){
+//		this.setCurrentState(LIST_STATE);
+//	}
 
 }
