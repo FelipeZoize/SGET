@@ -146,7 +146,7 @@ form{
 }
 
 .btActionTable{
-	width: 25% ;
+	width: 25% !important;
     background: none !important;
     border: none !important;
     height: 40%; 

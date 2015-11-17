@@ -42,7 +42,7 @@ public class AgendaMB {
 	
 	public void createAgenda(){
 		try {
-			agendaDAO.save(agenda);
+			agendaDAO.saveOrUpdate(agenda);
 		} catch (EJBException e) {
 			jsfMessageUtil.sendErrorMessageToUser("Erro, verificar se todos os campos estão corretos!");			
 		}
@@ -55,7 +55,7 @@ public class AgendaMB {
 	}
 	public void updateAgenda(){
 		try {
-			agendaDAO.update(agenda);
+			agendaDAO.saveOrUpdate(agenda);
 		} catch (EJBException e) {
 			jsfMessageUtil.sendErrorMessageToUser("Erro, verificar se todos os campos estão corretos!");
 		}

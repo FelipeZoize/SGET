@@ -31,7 +31,7 @@ public class AgendaDAO extends GenericDAO<Agenda> {
 		return query.getResultList();
 	}
 	
-	public void save(Agenda agenda){
+	public void saveOrUpdate(Agenda agenda){
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(agenda.getDataFim());
 		calendar.add(Calendar.DAY_OF_MONTH,- agenda.getAviso());
@@ -39,7 +39,11 @@ public class AgendaDAO extends GenericDAO<Agenda> {
 		agenda.setDataInicio(calendar.getTime());
 		
 		agenda.setDataCadastro(new Date());
-		super.save(agenda);
+		if(agenda.getId() == 0){
+			super.save(agenda);
+		}else{
+			super.update(agenda);
+		}
 	}
 
 }
