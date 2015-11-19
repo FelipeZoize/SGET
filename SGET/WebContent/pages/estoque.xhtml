@@ -1,0 +1,169 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<h:body>
+	<ui:composition template="/pages/template/crudTemplate.xhtml">
+		<ui:param name="formType" value="#{msgs.estoque}" />
+		<ui:define name="logo_page">
+			<div class="leftIconBox">
+				<h:graphicImage library="img" name="agenda.png" class="leftIcon" />
+				<div class="leftIconText">
+					<h:outputText value="#{msgs.estoque}" />
+				</div>
+				<ul>
+					<li><p:commandLink value="#{msgs.create}"
+							action="#{estoqueMB.prepareFormCadastro()}"
+							update="mainOutputPanel" immediate="true" /></li>
+					<li><p:commandLink value="#{msgs.listar}"
+							action="#{estoqueMB.prepareList()}" update="mainOutputPanel"
+							immediate="true" /></li>
+					<li><p:commandLink value="#{msgs.quit}"
+							action="index?faces-redirect=true" immediate="true" /></li>
+				</ul>
+
+			</div>
+		</ui:define>
+
+		<ui:define name="addUpdateBlock">
+			<h:form>
+				<h:panelGrid columns="2" class="formPanelGrid">
+					<h:panelGrid columns="2" styleClass="panelPlus">
+					
+					   <p:autoComplete id="produtoNome" value="#{estoqueMB.estoque.produto}"
+                        completeMethod="#{estoqueMB.autocomplete}"
+                        var="produto"  converter="convertProduto" itemLabel="#{produto.nome}" itemValue="#{produto}" placeholder="#{msgs.produto}" class="inputText btAutoComplete" style="width: 90% !important;
+                         padding-left:11% !important;" forceSelection="true"  effect="fade" />						
+
+						<p:commandButton styleClass="btActionTable "
+							icon="ui-icon-circle-plus" title="Adicionar novo produto"
+							onclick="PF('novoProduto').show();" immediate="true"/>
+
+						<p:dialog header="Novo Produto" widgetVar="novoProduto"
+							showEffect="explode" hideEffect="puff" height="100" resizable="false" width="300" modal="true" style="background-color:#E4DEDE;">
+							<p:inputText id="novoProdutoNome"
+								value="#{produtoMB.produto.nome}"
+								placeholder="Nome do produto" class="inputText" style="background-color:white !important;"/>
+							<h:commandButton action="#{produtoMB.createProduto()}"
+								value="#{msgs.create}" class="btAddUpdate" style="width: 80%; margin-left: 0;"/>
+						</p:dialog>
+
+					</h:panelGrid>
+					
+				</h:panelGrid>
+				
+				<h:panelGrid columns="2" class="panelCalendar" style="width: 77%;">
+					<h:outputText value="#{msgs.estoqueQtd}" />
+					<p:inputText id="estoqueQtd"
+						value="#{estoqueMB.estoque.quantidade}" size="5" class="inputText" />
+
+					<h:outputText value="#{msgs.estoqueQtdVenda}" />
+					<p:inputText id="estoqueQtdVenda"
+						value="#{estoqueMB.estoque.qtdVendidos}" size="5"
+						class="inputText" />
+
+					<h:outputText value="#{msgs.estoquePrecoCompra}" />
+					<p:inputText id="estoquePrecoCompra"
+						value="#{estoqueMB.estoque.precoCompra}" size="5"
+						class="inputText" />
+
+					<h:outputText value="#{msgs.estoquePrecoVenda}" />
+					<p:inputText id="estoquePrecoVenda"
+						value="#{estoqueMB.estoque.precoVenda}" size="5" class="inputText" />
+
+					<!-- <h:outputText value="#{msgs.produtoVenda}" />
+					<p:selectBooleanCheckbox id="produtoVendivel"
+						value="#{estoqueMB.estoque.produto.venda}" size="5"
+						style="text-align:center" /> -->
+				</h:panelGrid>
+
+				<h:panelGrid columns="2" class="formPanelGrid">
+					<h:commandButton rendered="#{currentStateMB.addState}"
+						action="#{estoqueMB.createEstoque()}" value="#{msgs.create}"
+						class="btAddUpdate" update="mainOutputPanel" />
+					<h:commandButton rendered="#{currentStateMB.updateState}"
+						action="#{clienteMB.updateCliente()}" value="#{msgs.update}"
+						class="btAddUpdate" />
+					<h:commandButton type="reset" value="#{msgs.clean}"
+						immediate="true" class="btCancelar"
+						rendered="#{currentStateMB.addState}" />
+					<h:commandButton action="#{clienteMB.prepareList()}"
+						update="mainOutputPanel" value="#{msgs.cancel}" immediate="true"
+						class="btCancelar" rendered="#{currentStateMB.updateState}" />
+				</h:panelGrid>
+
+			</h:form>
+		</ui:define>
+
+		<ui:define name="searchlistBlock">
+			<h:form id="listClientes" class="formList">
+
+				<p:dataTable value="#{clienteMB.listClientes}" var="cliente"
+					resizableColumns="true" id="resultTable" paginator="true"
+					paginatorPosition="bottom" rows="10" reflow="true"
+					widgetVar="clienteTable"
+					emptyMessage="Nenhum Resultado Encontrado!">
+
+					<f:facet name="header">
+						<p:outputPanel>
+							<h:outputText value="Buscar na tabela:" />
+							<p:inputText id="globalFilter"
+								value="#{clienteMB.searchParameter}" style="width:150px"
+								placeholder="Digite aqui" />
+							<p:commandButton styleClass="btSearch" icon="ui-icon-search"
+								title="Buscar" action="#{clienteMB.findClientes()}"
+								update="resultTable" />
+						</p:outputPanel>
+					</f:facet>
+					<h:inputHidden value="#{cliente.id}" />
+
+					<p:column headerText="#{msgs.clienteNome}" resizable="false"
+						sortBy="#{cliente.nome}">
+						<h:outputText value="#{cliente.nome}" />
+					</p:column>
+
+					<p:column headerText="#{msgs.clienteCpf}">
+						<h:outputText value="#{cliente.cpf}" converter="convertInput" />
+					</p:column>
+
+					<p:column headerText="#{msgs.clienteCel}">
+						<h:outputText value="#{cliente.celular}" />
+					</p:column>
+
+					<p:column width="40" resizable="false">
+						<p:commandButton styleClass="btActionTable" icon="ui-icon-pencil"
+							title="#{msgs.edit}" action="#{currentStateMB.prepareUpdate()}"
+							update="mainOutputPanel">
+							<f:setPropertyActionListener value="#{cliente}"
+								target="#{clienteMB.cliente}" />
+						</p:commandButton>
+						<p:commandButton icon="ui-icon-trash" styleClass="btActionTable"
+							title="#{msgs.remove}" action="#{clienteMB.deleteCliente()}"
+							update="listClientes">
+							<p:confirm header="Confirmação" message="Você tem certeza?"
+								icon="ui-icon-alert" />
+							<f:setPropertyActionListener value="#{cliente}"
+								target="#{clienteMB.cliente}" />
+						</p:commandButton>
+
+						<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+							<p:commandButton value="Sim" type="button"
+								styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+							<p:commandButton value="Não" type="button"
+								styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+						</p:confirmDialog>
+					</p:column>
+
+				</p:dataTable>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+
+</html>
+

@@ -29,29 +29,29 @@
 			<h:form>
 				<h:panelGrid columns="1" class="formPanelGrid">
 					<p:inputText id="clienteNome" value="#{clienteMB.cliente.nome}"
-						placeholder="Nome" class="inputText" required="true" requiredMessage="#{msgs.clienteNomeRequired}"/>
+						placeholder="#{msgs.clienteNome}" class="inputText" required="true" requiredMessage="#{msgs.clienteNomeRequired}"/>
 
 					<p:inputMask id="clienteCpf" value="#{clienteMB.cliente.cpf}"
-						mask="999.999.999-99" placeholder="Cpf" class="inputText" converter="convertInput" required="true" requiredMessage="#{msgs.clienteCpfRequired}"/>
+						mask="999.999.999-99" placeholder="#{msgs.clienteCpf}" class="inputText" converter="convertInput" required="true" requiredMessage="#{msgs.clienteCpfRequired}"/>
 
 					<p:inputText id="clienteRg" value="#{clienteMB.cliente.rg}"
-						placeholder="Rg" class="inputText" required="true" requiredMessage="#{msgs.clienteRgRequired}"/>
+						placeholder="#{msgs.clienteRg}" class="inputText" required="true" requiredMessage="#{msgs.clienteRgRequired}"/>
 
 					<p:inputText id="clienteEmail" value="#{clienteMB.cliente.email}"
-						placeholder="Email" class="inputText" />
+						placeholder="#{msgs.clienteEmail}" class="inputText" />
 
 					<p:inputMask id="clienteTel" value="#{clienteMB.cliente.telefone}"
-						mask="(99) 9999-9999" placeholder="Telefone" class="inputText" converter="convertInput"/>
+						mask="(99) 9999-9999" placeholder="#{msgs.clienteTel}" class="inputText" converter="convertInput"/>
 
 					<p:inputMask id="clienteCel" value="#{clienteMB.cliente.celular}"
-						mask="(99) 9999-9999" placeholder="Celular" class="inputText" converter="convertInput"/>
+						mask="(99) 9999-9999" placeholder="#{msgs.clienteCel}" class="inputText" converter="convertInput"/>
 
 					<p:inputText id="clienteBairro" value="#{clienteMB.cliente.bairro}"
-						placeholder="Bairro" class="inputText" />
+						placeholder="#{msgs.clienteBairro}" class="inputText" />
 
 					<p:inputMask id="clienteDataNasc"
 						value="#{clienteMB.cliente.dataNascimento}" mask="99/99/9999"
-						placeholder="Data de Nascimento" class="inputText"
+						placeholder="#{msgs.clienteDataNasc}" class="inputText"
 						converter="convertInput">
 						<f:convertDateTime pattern="dd/MM/yyyy" />
 					</p:inputMask>
@@ -82,16 +82,16 @@
 					resizableColumns="true" id="resultTable" paginator="true"
 					paginatorPosition="bottom" rows="10" reflow="true"
 					widgetVar="clienteTable"
-					emptyMessage="Nenhum Resultado Encontrado!">
+					emptyMessage="#{msgs.noResults}">
 
 					<f:facet name="header">
 						<p:outputPanel>
-							<h:outputText value="Buscar na tabela:" />
+							<h:outputText value="#{msgs.searchOnTable}" />
 							<p:inputText id="globalFilter"
 								value="#{clienteMB.searchParameter}" style="width:150px"
-								placeholder="Digite aqui" />
+								placeholder="#{msgs.writeHere}" />
 							<p:commandButton styleClass="btSearch" icon="ui-icon-search"
-								title="Buscar" action="#{clienteMB.findClientes()}"
+								title="#{msgs.search}" action="#{clienteMB.findClientes()}"
 								update="resultTable" />
 						</p:outputPanel>
 					</f:facet>

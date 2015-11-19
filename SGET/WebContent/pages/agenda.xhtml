@@ -28,10 +28,10 @@
 			<h:form>
 				<h:panelGrid columns="1" class="formPanelGrid">
 				
-					<p:inputText id="agendaTitulo" value="#{agendaMB.agenda.titulo}" placeholder="Titulo" class="inputText" required="true" requiredMessage="#{msgs.agendaTituloRequired}"/>
+					<p:inputText id="agendaTitulo" value="#{agendaMB.agenda.titulo}" placeholder="#{msgs.agendaTitulo}" class="inputText" required="true" requiredMessage="#{msgs.agendaTituloRequired}"/>
 
 					<p:inputTextarea id="agendaDesc" rows="6" cols="33"
-						value="#{agendaMB.agenda.descricao}" placeholder="Descrição" class="inputText" required="true" requiredMessage="#{msgs.agendaDescRequired}"/>
+						value="#{agendaMB.agenda.descricao}" placeholder="#{msgs.agendaDesc}" class="inputText" required="true" requiredMessage="#{msgs.agendaDescRequired}"/>
 					
 					<!-- <p:inputMask id="agendaDataFim" value="#{agendaMB.agenda.dataFim}"
 						mask="99/99/9999" placeholder="#{msgs.agendaData}" class="inputText" converter="convertInput" >
@@ -41,7 +41,7 @@
 					<p:calendar id="time" value="#{agendaMB.agenda.dataFim}" pattern="dd/MM/yyyy HH:mm"  placeholder="#{msgs.agendaDataHora}" class="inputText" size="40" required="true" requiredMessage="#{msgs.agendaDataRequired}"/>
 					
 					<h:panelGrid columns="2" class="panelCalendar">
-						<h:outputText value="Avisar com quantos dias de antecedência:"/>
+						<h:outputText value="#{msgs.agendaAviso}"/>
 						<p:inputText id="agendaAviso" value="#{agendaMB.agenda.aviso}" size="1" class="inputText" converter="convertInput"/>
 					</h:panelGrid>
 					
@@ -69,15 +69,15 @@
 				<p:dataTable value="#{agendaMB.listAgenda}" var="agenda" resizableColumns="true"
 					id="resultTable" paginator="true" paginatorPosition="bottom"
 					rows="10"  reflow="true"  widgetVar="agendaTable"
-					emptyMessage="Nenhum Resultado Encontrado!">
+					emptyMessage="#{msgs.noResults}">
 
 					<f:facet name="header">
 						<p:outputPanel>
-							<h:outputText value="Buscar na tabela:" />
+							<h:outputText value="#{msgs.searchOnTable}" />
 							<p:inputText id="globalFilter" 
 								value="#{agendaMB.searchParameter}" style="width:150px"
-								placeholder="Digite aqui" />
-							<p:commandButton styleClass="btSearch" icon="ui-icon-search" title="Buscar"
+								placeholder="#{msgs.writeHere}" />
+							<p:commandButton styleClass="btSearch" icon="ui-icon-search" title="#{msgs.search}"
 								action="#{agendaMB.findAgenda()}" update="resultTable"/>
 						</p:outputPanel>
 					</f:facet>
