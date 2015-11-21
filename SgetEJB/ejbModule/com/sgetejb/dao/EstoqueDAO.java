@@ -9,7 +9,6 @@ import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.persistence.Query;
 
-import com.sgetejb.model.Cliente;
 import com.sgetejb.model.Estoque;
 
 /**
@@ -29,8 +28,8 @@ public class EstoqueDAO extends GenericDAO<Estoque> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Cliente> findEstoque(String parameterToSearch){
-		Query query = super.getEm().createQuery("SELECT e FROM Estoque e WHERE descricao LIKE :parameterToSearch ORDER BY e.descricao ASC ",Cliente.class);		query.setParameter("parameterToSearch", parameterToSearch+"%");
+	public List<Estoque> findEstoque(String parameterToSearch){
+		Query query = super.getEm().createQuery("SELECT e FROM Estoque e INNER JOIN e.produto p WHERE p.nome LIKE :parameterToSearch ORDER BY p.nome ASC ",Estoque.class);		query.setParameter("parameterToSearch", parameterToSearch+"%");
 		return query.getResultList();
 	}
 }

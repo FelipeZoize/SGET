@@ -49,8 +49,8 @@
 							<p:inputText id="novoProdutoNome"
 								value="#{produtoMB.produto.nome}"
 								placeholder="Nome do produto" class="inputText" style="background-color:white !important;"/>
-							<h:commandButton action="#{produtoMB.createProduto()}"
-								value="#{msgs.create}" class="btAddUpdate" style="width: 80%; margin-left: 0;"/>
+							<p:commandButton action="#{produtoMB.createProduto()}"
+								value="#{msgs.create}" class="btAddUpdate" style="width: 80%; margin-left: 0;" update="produtoNome" oncomplete="#{estoqueMB.init()}"/>
 						</p:dialog>
 
 					</h:panelGrid>
@@ -87,12 +87,12 @@
 						action="#{estoqueMB.createEstoque()}" value="#{msgs.create}"
 						class="btAddUpdate" update="mainOutputPanel" />
 					<h:commandButton rendered="#{currentStateMB.updateState}"
-						action="#{clienteMB.updateCliente()}" value="#{msgs.update}"
+						action="#{estoqueMB.updateEstoque()}" value="#{msgs.update}"
 						class="btAddUpdate" />
 					<h:commandButton type="reset" value="#{msgs.clean}"
 						immediate="true" class="btCancelar"
 						rendered="#{currentStateMB.addState}" />
-					<h:commandButton action="#{clienteMB.prepareList()}"
+					<h:commandButton action="#{estoqueMB.prepareList()}"
 						update="mainOutputPanel" value="#{msgs.cancel}" immediate="true"
 						class="btCancelar" rendered="#{currentStateMB.updateState}" />
 				</h:panelGrid>
@@ -103,52 +103,60 @@
 		<ui:define name="searchlistBlock">
 			<h:form id="listClientes" class="formList">
 
-				<p:dataTable value="#{clienteMB.listClientes}" var="cliente"
+				<p:dataTable value="#{estoqueMB.listEstoque}" var="estoque"
 					resizableColumns="true" id="resultTable" paginator="true"
 					paginatorPosition="bottom" rows="10" reflow="true"
-					widgetVar="clienteTable"
+					widgetVar="estoqueTable"
 					emptyMessage="Nenhum Resultado Encontrado!">
 
 					<f:facet name="header">
 						<p:outputPanel>
-							<h:outputText value="Buscar na tabela:" />
+							<h:outputText value="#{msgs.searchOnTable}" />
 							<p:inputText id="globalFilter"
-								value="#{clienteMB.searchParameter}" style="width:150px"
-								placeholder="Digite aqui" />
+								value="#{estoqueMB.searchParameter}" style="width:150px"
+								placeholder="#{msgs.writeHere}" />
 							<p:commandButton styleClass="btSearch" icon="ui-icon-search"
-								title="Buscar" action="#{clienteMB.findClientes()}"
+								title="#{msgs.search}" action="#{estoqueMB.findEstoque()}"
 								update="resultTable" />
 						</p:outputPanel>
 					</f:facet>
-					<h:inputHidden value="#{cliente.id}" />
+					<h:inputHidden value="#{estoque.id}" />
 
-					<p:column headerText="#{msgs.clienteNome}" resizable="false"
-						sortBy="#{cliente.nome}">
-						<h:outputText value="#{cliente.nome}" />
+					<p:column headerText="#{msgs.produtoNome}" resizable="false"
+						sortBy="#{estoque.produto.nome}">
+						<h:outputText value="#{estoque.produto.nome}" />
 					</p:column>
 
-					<p:column headerText="#{msgs.clienteCpf}">
-						<h:outputText value="#{cliente.cpf}" converter="convertInput" />
+					<p:column headerText="#{msgs.estoqueQtd}">
+						<h:outputText value="#{estoque.quantidade}"  />
 					</p:column>
 
-					<p:column headerText="#{msgs.clienteCel}">
-						<h:outputText value="#{cliente.celular}" />
+					<p:column headerText="#{msgs.estoqueQtdVenda}">
+						<h:outputText value="#{estoque.qtdVendidos}" />
+					</p:column>
+					
+					<p:column headerText="#{msgs.estoquePrecoCompra}">
+						<h:outputText value="#{estoque.precoCompra}" />
+					</p:column>
+					
+					<p:column headerText="#{msgs.estoquePrecoVenda}">
+						<h:outputText value="#{estoque.precoVenda}" />
 					</p:column>
 
 					<p:column width="40" resizable="false">
 						<p:commandButton styleClass="btActionTable" icon="ui-icon-pencil"
 							title="#{msgs.edit}" action="#{currentStateMB.prepareUpdate()}"
 							update="mainOutputPanel">
-							<f:setPropertyActionListener value="#{cliente}"
-								target="#{clienteMB.cliente}" />
+							<f:setPropertyActionListener value="#{estoque}"
+								target="#{estoqueMB.estoque}" />
 						</p:commandButton>
 						<p:commandButton icon="ui-icon-trash" styleClass="btActionTable"
-							title="#{msgs.remove}" action="#{clienteMB.deleteCliente()}"
+							title="#{msgs.remove}" action="#{estoqueMB.deleteEstoque()}"
 							update="listClientes">
 							<p:confirm header="Confirmação" message="Você tem certeza?"
 								icon="ui-icon-alert" />
-							<f:setPropertyActionListener value="#{cliente}"
-								target="#{clienteMB.cliente}" />
+							<f:setPropertyActionListener value="#{estoque}"
+								target="#{estoqueMB.estoque}" />
 						</p:commandButton>
 
 						<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">

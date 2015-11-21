@@ -5,16 +5,13 @@ package com.sget.mb;
 
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
 
 import com.sget.utils.JSFMessageUtil;
 import com.sgetejb.dao.ProdutoDAO;
-import com.sgetejb.model.Estoque;
 import com.sgetejb.model.Produto;
 
 /**
@@ -26,7 +23,6 @@ import com.sgetejb.model.Produto;
 @SessionScoped
 public class ProdutoMB {
 
-
 	public static String STAY_IN_THE_SAME_PAGE = "estoque";
 
 	@EJB
@@ -35,15 +31,8 @@ public class ProdutoMB {
 	private Produto produto;
 
 	private JSFMessageUtil jsfMessageUtil = new JSFMessageUtil();
-	
-//	@PostConstruct	
-//	public void init(){
-//		produto = new Produto();
-//		produto.setVenda(false);
-//	}
 
-
-	public void createProduto(){
+	public String createProduto(){
 		try {
 			produtoDAO.save(produto);
 		} catch (EJBException e) {
@@ -53,7 +42,8 @@ public class ProdutoMB {
 		jsfMessageUtil.sendInfoMessageToUser("Operação Realizada com Sucesso");
 
 		this.setProduto(null);
-
+		 
+		return STAY_IN_THE_SAME_PAGE+"?faces-redirect=true";
 	}
 	
 	public List<Produto> findProdutos(String parameterToSearch){
@@ -61,14 +51,13 @@ public class ProdutoMB {
 		
 	}
 	
-	public Produto findProduto(){
-		return produtoDAO.findProduto(95);
+	public Produto findProduto(int id){
+		return produtoDAO.find(id);
 	}
 	
 	public List<Produto> findAllProdutos(){
 		return produtoDAO.findAll();
 	}
-
 
 	public Produto getProduto() {
 		if(produto == null){
@@ -82,7 +71,6 @@ public class ProdutoMB {
 	public void setProduto(Produto produto) {
 		this.produto = produto;
 	}
-
 
 
 }

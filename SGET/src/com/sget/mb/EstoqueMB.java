@@ -17,7 +17,6 @@ import com.sget.utils.CurrentStateIF;
 import com.sget.utils.CurrentStateMB;
 import com.sget.utils.JSFMessageUtil;
 import com.sgetejb.dao.EstoqueDAO;
-import com.sgetejb.model.Cliente;
 import com.sgetejb.model.Estoque;
 import com.sgetejb.model.Produto;
 
@@ -46,11 +45,13 @@ public class EstoqueMB {
 	
 	private JSFMessageUtil jsfMessageUtil = new JSFMessageUtil();
 	
+	private String searchParameter;
+
+	
 	@PostConstruct
 	public void init(){
 		this.listProduto = produtoMB.findAllProdutos();
 	}
-
 
 	public String createEstoque(){
 		try {
@@ -63,9 +64,35 @@ public class EstoqueMB {
 
 		this.setEstoque(null);
 		
+		findAllEstoque();
+		
 		return STAY_IN_THE_SAME_PAGE;
+	}
+	
+	public void deleteEstoque(){
+		try {
+			estoqueDAO.delete(estoque);
+		} catch (EJBException e) {
+			jsfMessageUtil.sendErrorMessageToUser("Erro ao deletar o produto!");
+		}
 
-		//findAllClientes();
+		jsfMessageUtil.sendInfoMessageToUser("Operação Realizada com Sucesso");
+		findAllEstoque();
+		
+	}
+	
+	public void updateEstoque(){
+		try {
+			estoqueDAO.update(estoque);
+		} catch (EJBException e) {
+			jsfMessageUtil.sendErrorMessageToUser("Erro, verificar se todos os campos estão corretos!");
+		}
+
+		jsfMessageUtil.sendInfoMessageToUser("Operação Realizada com Sucesso");
+		
+		currentStateMB.setCurrentState(CurrentStateIF.ADD_STATE);
+		
+		findAllEstoque();
 	}
 	
 	public List<Produto> produtoAutoComplete(String parameterToSearch){
@@ -90,13 +117,16 @@ public class EstoqueMB {
 		return STAY_IN_THE_SAME_PAGE;
 
 	}
+	public void findEstoque(){
+		listEstoque = estoqueDAO.findEstoque(searchParameter);
+	}
 	public void findAllEstoque(){		
 		this.setListEstoque(estoqueDAO.findAll());
 		
 		currentStateMB.setCurrentState(CurrentStateIF.LIST_STATE);
 	}
 	public String prepareList(){
-		//findAll();
+		findAllEstoque();
 		return STAY_IN_THE_SAME_PAGE;
 	}
 
@@ -115,8 +145,7 @@ public class EstoqueMB {
 	}
 	public void setListEstoque(List<Estoque> listEstoque) {
 		this.listEstoque = listEstoque;
-	}
-	
+	}	
 	
 	public List<Produto> getListProduto() {
 		return listProduto;
@@ -124,6 +153,16 @@ public class EstoqueMB {
 	public void setListProduto(List<Produto> listProduto) {
 		this.listProduto = listProduto;
 	}
+	
+	public String getSearchParameter() {
+		return searchParameter;
+	}
+
+	public void setSearchParameter(String searchParameter) {
+		this.searchParameter = searchParameter;
+	}
+
+
 	public void setCurrentStateMB(CurrentStateMB currentStateMB) {
 		this.currentStateMB = currentStateMB;
 	}

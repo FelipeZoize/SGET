@@ -9,7 +9,6 @@ import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.persistence.Query;
 
-import com.sgetejb.model.Cliente;
 import com.sgetejb.model.Produto;
 
 /**
@@ -35,13 +34,10 @@ public class ProdutoDAO extends GenericDAO<Produto>{
 		query.setParameter("parameterToSearch", parameterToSearch+"%");
 		return query.getResultList();
 	}
-
-	public Produto findi(int entityID){
-		return getEm().find(Produto.class, entityID);
-	}
-	public  Produto findProduto(int id) {
-		Query query = super.getEm().createQuery("select p from Produto p where p.id = :id");
-		query.setParameter("id", id);
-		return (Produto) query.getSingleResult();
-	}
+	
+//	public  Produto findProduto(int id) {
+//		Query query = super.getEm().createQuery("select p from Produto p where p.id = :id");
+//		query.setParameter("id", id);
+//		return (Produto) query.getSingleResult();
+//	}
 }
