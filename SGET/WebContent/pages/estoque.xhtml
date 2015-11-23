@@ -12,7 +12,7 @@
 		<ui:param name="formType" value="#{msgs.estoque}" />
 		<ui:define name="logo_page">
 			<div class="leftIconBox">
-				<h:graphicImage library="img" name="agenda.png" class="leftIcon" />
+				<h:graphicImage library="img" name="Estoque2.png" class="leftIcon" style="left:40%;"/>
 				<div class="leftIconText">
 					<h:outputText value="#{msgs.estoque}" />
 				</div>
@@ -24,7 +24,7 @@
 							action="#{estoqueMB.prepareList()}" update="mainOutputPanel"
 							immediate="true" /></li>
 					<li><p:commandLink value="#{msgs.quit}"
-							action="index?faces-redirect=true" immediate="true" /></li>
+							action="#{estoqueMB.prepareIndex()}"  immediate="true" /></li>
 				</ul>
 
 			</div>

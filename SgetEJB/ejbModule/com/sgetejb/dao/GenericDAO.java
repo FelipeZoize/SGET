@@ -43,7 +43,7 @@ public abstract class GenericDAO<T> {
         cq.select(cq.from(entityClass));
         return em.createQuery(cq).getResultList();
     }
-
+		
 	public EntityManager getEm() {
 		return em;
 	}

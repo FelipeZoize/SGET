@@ -77,6 +77,9 @@ public class ClienteMB {
 	public void findClientes(){
 		listClientes = clienteDAO.findClientes(searchParameter);
 	}
+	public Cliente findCliente(int id){
+		return clienteDAO.find(id);
+	}
 
 	public void deleteCliente(){
 		try {
@@ -99,6 +102,15 @@ public class ClienteMB {
 	public String prepareList(){
 		findAllClientes();
 		return STAY_IN_THE_SAME_PAGE;
+	}
+	public String prepareIndex(){
+		currentStateMB.setCurrentState(CurrentStateIF.ADD_STATE);
+		setCliente(null);
+		return "index?faces-redirect=true";
+	}
+	
+	public List<Cliente> findAll(){		
+		return clienteDAO.findAll();
 	}
 
 	public Cliente getCliente() {

@@ -97,6 +97,11 @@ public class AgendaMB {
 		findAllAgenda();
 		return STAY_IN_THE_SAME_PAGE;
 	}
+	public String prepareIndex(){
+		currentStateMB.setCurrentState(CurrentStateIF.ADD_STATE);
+		setAgenda(null);
+		return "index?faces-redirect=true";
+	}
 	
 	public Agenda getAgenda(){
 		if(agenda == null){

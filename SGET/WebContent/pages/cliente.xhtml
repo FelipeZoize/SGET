@@ -12,14 +12,14 @@
 		<ui:param name="formType" value="Clientes" />
 		<ui:define name="logo_page">
 			<div class="leftIconBox">
-				<h:graphicImage library="img" name="agenda.png" class="leftIcon"/>
+				<h:graphicImage library="img" name="cliente_oldschool.png" class="leftIcon"/>
 				<div class="leftIconText">
 					<h:outputText value="#{msgs.clientes}" />
 				</div>	
 				<ul>
 					<li><p:commandLink value="#{msgs.create}" action="#{clienteMB.prepareFormCadastro()}" update="mainOutputPanel" immediate="true"/></li>
 					<li><p:commandLink value="#{msgs.listar}" action="#{clienteMB.prepareList()}" update="mainOutputPanel" immediate="true"/></li>
-					<li><p:commandLink value="#{msgs.quit}" action="index?faces-redirect=true" immediate="true"/></li>
+					<li><p:commandLink value="#{msgs.quit}" action="#{clienteMB.prepareIndex()}"  immediate="true"/></li>
 				</ul>
 				
 			</div>

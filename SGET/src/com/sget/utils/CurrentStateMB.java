@@ -26,4 +26,8 @@ public class CurrentStateMB extends CurrentState{
 	public void prepareUpdate(){
 		super.setCurrentState(CurrentStateIF.UPDATE_STATE);
 	}
+	public String prepareIndex(){
+		super.setCurrentState(CurrentStateIF.ADD_STATE);
+		return "index?faces-redirect=true";
+	}
 }

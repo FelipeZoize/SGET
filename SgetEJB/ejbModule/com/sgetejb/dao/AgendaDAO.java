@@ -8,8 +8,6 @@ import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.persistence.Query;
 
-import sun.security.jca.GetInstance;
-
 import com.sgetejb.model.Agenda;
 
 @Stateless

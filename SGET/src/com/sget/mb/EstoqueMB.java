@@ -129,6 +129,15 @@ public class EstoqueMB {
 		findAllEstoque();
 		return STAY_IN_THE_SAME_PAGE;
 	}
+	public String prepareIndex(){
+		currentStateMB.setCurrentState(CurrentStateIF.ADD_STATE);
+		setEstoque(null);
+		return "index?faces-redirect=true";
+	}
+	
+	public List<Estoque> findAll(){		
+		return estoqueDAO.findAll();
+	}
 
 	public Estoque getEstoque() {
 		if (estoque == null){

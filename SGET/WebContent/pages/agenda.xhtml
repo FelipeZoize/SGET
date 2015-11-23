@@ -18,7 +18,7 @@
 				<ul>
 					<li><p:commandLink value="#{msgs.create}" action="#{agendaMB.prepareFormCadastro()}" update="mainOutputPanel" immediate="true"/></li>
 					<li><p:commandLink value="#{msgs.listar}" action="#{agendaMB.prepareList()}" update="mainOutputPanel" immediate="true"/></li>
-					<li><p:commandLink value="#{msgs.quit}" action="index?faces-redirect=true" immediate="true"/></li>
+					<li><p:commandLink value="#{msgs.quit}" action="#{agendaMB.prepareIndex()}" immediate="true"/></li>
 				</ul>
 				
 			</div>

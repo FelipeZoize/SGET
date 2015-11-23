@@ -1,0 +1,174 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<h:body>
+	<ui:composition template="/pages/template/crudTemplate.xhtml">
+		<ui:param name="formType" value="#{msgs.financeiro}" />
+		<ui:define name="logo_page">
+			<div class="leftIconBox">
+				<h:graphicImage library="img" name="iconFinancas.png" class="leftIcon" />
+				<div class="leftIconText" style="left:25%;">
+					<h:outputText value="#{msgs.financeiro}" />
+				</div>
+				<ul>
+					<li><p:commandLink value="#{msgs.create}"
+							action="#{vendaMB.prepareFormCadastro()}"
+							update="mainOutputPanel" immediate="true" /></li>
+					<li><p:commandLink value="#{msgs.listar}"
+							action="#{vendaMB.prepareList()}" update="mainOutputPanel"
+							immediate="true" /></li>
+					<li><p:commandLink value="#{msgs.quit}"
+							action="#{vendaMB.prepareIndex()}"  immediate="true" /></li>
+				</ul>
+
+			</div>
+		</ui:define>
+
+		<ui:define name="addUpdateBlock">
+			<h:form>
+				<h:panelGrid columns="1" class="formPanelGrid">
+					<h:panelGrid columns="2" styleClass="panelPlus">
+
+						<p:autoComplete id="clienteNome" value="#{vendaMB.venda.cliente}"
+							completeMethod="#{vendaMB.autocomplete}" var="cliente"
+							converter="convertCliente" itemLabel="#{cliente.nome}"
+							itemValue="#{cliente}" placeholder="#{msgs.cliente}"
+							class="inputText btAutoComplete"
+							style="width: 90% !important;
+                         padding-left:11% !important;"
+							forceSelection="true" effect="fade" />
+
+						<p:commandButton styleClass="btActionTable "
+							icon="ui-icon-circle-plus" title="Adicionar novo cliente"
+							action="cliente?faces-redirect=true" immediate="true" />
+
+					</h:panelGrid>
+					<h:panelGrid columns="1" style="padding-left:4%; width:90%; ">
+
+						<p:selectOneMenu id="tipoServico" value="#{vendaMB.tipo}"
+							style="width: 70%; " styleClass="tipoSelect">
+
+							<f:selectItem itemLabel="Selecione o serviço" itemValue=""
+								noSelectionOption="true" />
+							<!-- 						<f:selectItems value="#{vendaMB.tipoServico}" />
+ -->
+							<f:selectItem itemLabel="Produto" itemValue="1" />
+							<f:selectItem itemLabel="Tatuagem" itemValue="2" />
+							<p:ajax render="panelProd" event="change" />
+						</p:selectOneMenu>
+
+					</h:panelGrid>
+
+					<h:panelGrid columns="1" id="panelProd"
+						rendered="#{vendaMB.tipo.equals('1')}">
+
+						<p:autoComplete id="produtoNome"
+							value="#{vendaMB.venda.estoque.produto}"
+							completeMethod="#{vendaMB.autocompleteEstoque}" var="produto"
+							converter="convertProduto" itemLabel="#{produto.nome}"
+							itemValue="#{produto}" placeholder="#{msgs.produto}"
+							class="inputText btAutoComplete"
+							style="width: 90% !important;
+                        	 padding-left:11% !important;"
+							forceSelection="true" effect="fade" />
+
+					</h:panelGrid>
+
+					<h:panelGrid columns="2" class="panelCalendar" style="width: 75%;">
+
+						<h:outputText value="Valor" />
+						<p:inputText id="vendaValor" value="#{vendaMB.venda.valorTotal}"
+							size="5" class="inputText" style="width: 40% !important;"/>
+
+					</h:panelGrid>
+
+					<h:panelGrid columns="2" class="formPanelGrid">
+						<h:commandButton rendered="#{currentStateMB.addState}"
+							action="#{vendaMB.createVenda()}" value="#{msgs.create}"
+							class="btAddUpdate" update="mainOutputPanel" />
+						<h:commandButton rendered="#{currentStateMB.updateState}"
+							action="#{estoqueMB.updateEstoque()}" value="#{msgs.update}"
+							class="btAddUpdate" />
+						<h:commandButton type="reset" value="#{msgs.clean}"
+							immediate="true" class="btCancelar"
+							rendered="#{currentStateMB.addState}" />
+						<h:commandButton action="#{estoqueMB.prepareList()}"
+							update="mainOutputPanel" value="#{msgs.cancel}" immediate="true"
+							class="btCancelar" rendered="#{currentStateMB.updateState}" />
+					</h:panelGrid>
+				</h:panelGrid>
+			</h:form>
+		</ui:define>
+
+		<ui:define name="searchlistBlock">
+			<h:form id="listClientes" class="formList">
+
+				<p:dataTable value="#{vendaMB.listVenda}" var="venda"
+					resizableColumns="true" id="resultTable" paginator="true"
+					paginatorPosition="bottom" rows="10" reflow="true"
+					widgetVar="estoqueTable"
+					emptyMessage="Nenhum Resultado Encontrado!">
+
+					<f:facet name="header">
+						<p:outputPanel>
+							<h:outputText value="#{msgs.searchOnTable}" />
+							<p:inputText id="globalFilter" value="#{vendaMB.searchParameter}"
+								style="width:150px" placeholder="#{msgs.writeHere}" />
+							<p:commandButton styleClass="btSearch" icon="ui-icon-search"
+								title="#{msgs.search}" action="#{vendaMB.findVenda()}"
+								update="resultTable" />
+						</p:outputPanel>
+					</f:facet>
+					<h:inputHidden value="#{venda.id}" />
+
+					<p:column headerText="#{msgs.cliente}" resizable="false"
+						sortBy="#{venda.cliente.nome}">
+						<h:outputText value="#{venda.cliente.nome}" />
+					</p:column>
+
+					<p:column headerText="#{msgs.tipoServico}">
+						<h:outputText value="#{venda.tipoServico.nome}" />
+					</p:column>
+
+					<p:column headerText="#{msgs.financeiroValor}">
+						<h:outputText value="#{venda.valorTotal}" />
+					</p:column>
+
+					<p:column width="40" resizable="false">
+						<p:commandButton styleClass="btActionTable" icon="ui-icon-pencil"
+							title="#{msgs.edit}" action="#{currentStateMB.prepareUpdate()}"
+							update="mainOutputPanel">
+							<f:setPropertyActionListener value="#{venda}"
+								target="#{vendaMB.venda}" />
+						</p:commandButton>
+						<p:commandButton icon="ui-icon-trash" styleClass="btActionTable"
+							title="#{msgs.remove}" action="#{vendaMB.deleteVenda()}"
+							update="listClientes">
+							<p:confirm header="Confirmação" message="Você tem certeza?"
+								icon="ui-icon-alert" />
+							<f:setPropertyActionListener value="#{venda}"
+								target="#{vendaMB.venda}" />
+						</p:commandButton>
+
+						<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+							<p:commandButton value="Sim" type="button"
+								styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+							<p:commandButton value="Não" type="button"
+								styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+						</p:confirmDialog>
+					</p:column>
+
+				</p:dataTable>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+
+</html>
+
