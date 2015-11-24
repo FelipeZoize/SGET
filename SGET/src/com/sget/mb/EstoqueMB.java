@@ -27,27 +27,27 @@ import com.sgetejb.model.Produto;
 @ManagedBean
 @SessionScoped
 public class EstoqueMB {
-	
+
 	public static String STAY_IN_THE_SAME_PAGE = "estoque";
 
 	@EJB
 	private EstoqueDAO estoqueDAO;
-	
+
 	@ManagedProperty( value = "#{currentStateMB}")
 	private CurrentStateMB currentStateMB;
-	
+
 	@ManagedProperty( value = "#{produtoMB}")
 	private ProdutoMB produtoMB;
-	
+
 	private Estoque estoque;
 	private List<Estoque> listEstoque;	
 	private List<Produto> listProduto;
-	
+
 	private JSFMessageUtil jsfMessageUtil = new JSFMessageUtil();
-	
+
 	private String searchParameter;
 
-	
+
 	@PostConstruct
 	public void init(){
 		this.listProduto = produtoMB.findAllProdutos();
@@ -63,12 +63,12 @@ public class EstoqueMB {
 		jsfMessageUtil.sendInfoMessageToUser("Operação Realizada com Sucesso");
 
 		this.setEstoque(null);
-		
+
 		findAllEstoque();
-		
+
 		return STAY_IN_THE_SAME_PAGE;
 	}
-	
+
 	public void deleteEstoque(){
 		try {
 			estoqueDAO.delete(estoque);
@@ -78,9 +78,9 @@ public class EstoqueMB {
 
 		jsfMessageUtil.sendInfoMessageToUser("Operação Realizada com Sucesso");
 		findAllEstoque();
-		
+
 	}
-	
+
 	public void updateEstoque(){
 		try {
 			estoqueDAO.update(estoque);
@@ -89,28 +89,28 @@ public class EstoqueMB {
 		}
 
 		jsfMessageUtil.sendInfoMessageToUser("Operação Realizada com Sucesso");
-		
+
 		currentStateMB.setCurrentState(CurrentStateIF.ADD_STATE);
-		
+
 		findAllEstoque();
 	}
-	
+
 	public List<Produto> produtoAutoComplete(String parameterToSearch){
 		return produtoMB.findProdutos(parameterToSearch);
 	}
 	public List<Produto> autocomplete(String query) { 
-        
-        List<Produto> results = new ArrayList<Produto>();  
-          
-        for (Produto e : listProduto) { 
-            if (e.getNome().toLowerCase().startsWith(query.toLowerCase())) {
-                results.add(e);
-            }
-        }            
-        return results;  
-        
-    }
-	
+
+		List<Produto> results = new ArrayList<Produto>();  
+
+		for (Produto e : listProduto) { 
+			if (e.getNome().toLowerCase().startsWith(query.toLowerCase())) {
+				results.add(e);
+			}
+		}            
+		return results;  
+
+	}
+
 	public String prepareFormCadastro(){
 		setEstoque(null);
 		currentStateMB.setCurrentState(CurrentStateIF.ADD_STATE);
@@ -122,7 +122,7 @@ public class EstoqueMB {
 	}
 	public void findAllEstoque(){		
 		this.setListEstoque(estoqueDAO.findAll());
-		
+
 		currentStateMB.setCurrentState(CurrentStateIF.LIST_STATE);
 	}
 	public String prepareList(){
@@ -134,9 +134,25 @@ public class EstoqueMB {
 		setEstoque(null);
 		return "index?faces-redirect=true";
 	}
-	
+
 	public List<Estoque> findAll(){		
 		return estoqueDAO.findAll();
+	}
+
+	public void atualizarEstoque(List<Estoque> novoEstoque){
+		List<Estoque> estoqueAntigo = findAll();
+
+		for(Estoque e : novoEstoque){
+			for(int i=0;i < estoqueAntigo.size();i++){
+				if(e.getProduto().getId() == estoqueAntigo.get(i).getProduto().getId())
+				{
+					Estoque estoquePersist = estoqueAntigo.get(i);
+					estoquePersist.setQtdVendidos(estoquePersist.getQtdVendidos() + e.getQtdParaFecharVenda());
+					estoquePersist.setQuantidade(estoquePersist.getQuantidade() - e.getQtdParaFecharVenda());
+					estoqueDAO.update(estoquePersist);
+				}
+			}
+		}
 	}
 
 	public Estoque getEstoque() {
@@ -155,14 +171,14 @@ public class EstoqueMB {
 	public void setListEstoque(List<Estoque> listEstoque) {
 		this.listEstoque = listEstoque;
 	}	
-	
+
 	public List<Produto> getListProduto() {
 		return listProduto;
 	}
 	public void setListProduto(List<Produto> listProduto) {
 		this.listProduto = listProduto;
 	}
-	
+
 	public String getSearchParameter() {
 		return searchParameter;
 	}

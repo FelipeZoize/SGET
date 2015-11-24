@@ -256,3 +256,8 @@ btSearch{
     color: gray;
     background-color: black;
 }
+.btProdQtd {
+	font-size: 1.3em;
+	color: #A3A3A3;
+}
+

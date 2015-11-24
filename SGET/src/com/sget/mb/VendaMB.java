@@ -3,6 +3,7 @@
  */
 package com.sget.mb;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -15,6 +16,7 @@ import javax.ejb.EJBException;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
+import javax.faces.event.ValueChangeEvent;
 
 import com.sget.utils.CurrentStateIF;
 import com.sget.utils.CurrentStateMB;
@@ -35,6 +37,7 @@ import com.sgetejb.model.Venda;
 public class VendaMB {
 
 	public static String STAY_IN_THE_SAME_PAGE = "venda";
+	public static int TIPO_SERVICO_PRODUTO = 1;
 	
 	@EJB
 	private VendaDAO vendaDAO;
@@ -54,6 +57,9 @@ public class VendaMB {
 	private List<Cliente> listCliente;	
 	private List<Estoque> listEstoque;
 	private List<TipoServico> listTipoServico;
+	
+	private List<Estoque> listEstoqueVenda;
+	private int qtdEstoqueVenda;
     private Map<String,Integer> tipoServico;
     private String tipo;
 
@@ -76,7 +82,15 @@ public class VendaMB {
 		try {
 			venda.setDataVenda(new Date());
 			venda.getTipoServico().setId(Integer.parseInt(tipo));
+			if(venda.getTipoServico().getId() == TIPO_SERVICO_PRODUTO){
+				venda.setEstoques(this.listEstoqueVenda);
+				venda.setValorTotal(getValorVendaTotal());
+			}
 			vendaDAO.save(venda);
+			
+			if(venda.getTipoServico().getId() == TIPO_SERVICO_PRODUTO){
+				estoqueMB.atualizarEstoque(venda.getEstoques());
+			}
 		} catch (EJBException e) {
 			jsfMessageUtil.sendErrorMessageToUser("Erro, verificar se todos os campos estão corretos!");			
 		}
@@ -125,6 +139,7 @@ public class VendaMB {
 	public String prepareIndex(){
 		currentStateMB.setCurrentState(CurrentStateIF.ADD_STATE);
 		setVenda(null);
+		setListEstoqueVenda(null);
 		return "index?faces-redirect=true";
 	}
 	
@@ -162,6 +177,47 @@ public class VendaMB {
 		return results;  
 
 	}
+	
+	public void addEstoqueVenda(){
+		for(Estoque estoq : listEstoque){
+			if(estoq.getProduto().getId() == this.venda.getEstoque().getProduto().getId()){
+				estoq.setQtdParaFecharVenda(qtdEstoqueVenda);
+				if(estoq.getQtdParaFecharVenda() > estoq.getQuantidade()){
+					jsfMessageUtil.sendErrorMessageToUser("Quantidade ("+estoq.getQtdParaFecharVenda()+") maior que a disponivel no estoque("+estoq.getQuantidade()+")");
+				}else{
+					this.listEstoqueVenda.add(estoq);	
+				}
+			}
+		}
+		
+		//this.setVenda(null);
+		this.getVenda().setEstoque(new Estoque());
+		this.setQtdEstoqueVenda(0);
+	}
+	
+	public void removeEstoqueVenda(Estoque estoque){
+		for(Estoque estoq : listEstoque){
+			if(estoq.getProduto().getId() == estoque.getProduto().getId()){
+				
+				this.listEstoqueVenda.remove(estoq);	
+				
+			}
+		}
+		
+		this.setVenda(null);
+		this.setQtdEstoqueVenda(0);
+	}
+	
+	 public double getValorVendaTotal() {
+	        double total = 0;
+	 
+	        for(Estoque estoq : listEstoqueVenda) {
+	            total += estoq.getQtdParaFecharVenda() * estoq.getPrecoVenda();
+	        }
+	 
+	        return total;
+	    }
+	
 	public Venda getVenda() {
 		if(venda == null){
 			venda = new Venda();
@@ -239,8 +295,29 @@ public class VendaMB {
 		this.tipo = tipo;
 	}
 	
-	public String stay(){
+	public String stay(ValueChangeEvent event){
+		String d = event.toString();
+		String n = getTipo();
 		return "venda";
+	}
+
+	public List<Estoque> getListEstoqueVenda() {
+		if(listEstoqueVenda == null){
+			listEstoqueVenda = new ArrayList<Estoque>();
+		}
+		return listEstoqueVenda;
+	}
+
+	public void setListEstoqueVenda(List<Estoque> listEstoqueVenda) {
+		this.listEstoqueVenda = listEstoqueVenda;
+	}
+
+	public int getQtdEstoqueVenda() {
+		return qtdEstoqueVenda;
+	}
+
+	public void setQtdEstoqueVenda(int qtdEstoqueVenda) {
+		this.qtdEstoqueVenda = qtdEstoqueVenda;
 	}
 
 }

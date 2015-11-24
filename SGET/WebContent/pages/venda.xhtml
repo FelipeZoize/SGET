@@ -12,8 +12,9 @@
 		<ui:param name="formType" value="#{msgs.financeiro}" />
 		<ui:define name="logo_page">
 			<div class="leftIconBox">
-				<h:graphicImage library="img" name="iconFinancas.png" class="leftIcon" />
-				<div class="leftIconText" style="left:25%;">
+				<h:graphicImage library="img" name="iconFinancas.png"
+					class="leftIcon" />
+				<div class="leftIconText" style="left: 25%;">
 					<h:outputText value="#{msgs.financeiro}" />
 				</div>
 				<ul>
@@ -24,7 +25,7 @@
 							action="#{vendaMB.prepareList()}" update="mainOutputPanel"
 							immediate="true" /></li>
 					<li><p:commandLink value="#{msgs.quit}"
-							action="#{vendaMB.prepareIndex()}"  immediate="true" /></li>
+							action="#{vendaMB.prepareIndex()}" immediate="true" /></li>
 				</ul>
 
 			</div>
@@ -52,15 +53,17 @@
 					<h:panelGrid columns="1" style="padding-left:4%; width:90%; ">
 
 						<p:selectOneMenu id="tipoServico" value="#{vendaMB.tipo}"
-							style="width: 70%; " styleClass="tipoSelect">
+							onchange="submit()" style="width: 70%; " styleClass="tipoSelect"
+							valueChangeListener="#{vendaMB.stay}" update="panelProd">
 
 							<f:selectItem itemLabel="Selecione o serviço" itemValue=""
 								noSelectionOption="true" />
 							<!-- 						<f:selectItems value="#{vendaMB.tipoServico}" />
  -->
-							<f:selectItem itemLabel="Produto" itemValue="1" />
 							<f:selectItem itemLabel="Tatuagem" itemValue="2" />
-							<p:ajax render="panelProd" event="change" />
+							<f:selectItem itemLabel="Produto" itemValue="1" />
+
+							<p:ajax render="panelProd" event="change" update="panelProd" />
 						</p:selectOneMenu>
 
 					</h:panelGrid>
@@ -68,23 +71,89 @@
 					<h:panelGrid columns="1" id="panelProd"
 						rendered="#{vendaMB.tipo.equals('1')}">
 
-						<p:autoComplete id="produtoNome"
-							value="#{vendaMB.venda.estoque.produto}"
-							completeMethod="#{vendaMB.autocompleteEstoque}" var="produto"
-							converter="convertProduto" itemLabel="#{produto.nome}"
-							itemValue="#{produto}" placeholder="#{msgs.produto}"
-							class="inputText btAutoComplete"
-							style="width: 90% !important;
-                        	 padding-left:11% !important;"
-							forceSelection="true" effect="fade" />
+						<h:panelGrid columns="4">
+							<p:autoComplete id="produtoNome"
+								value="#{vendaMB.venda.estoque.produto}"
+								completeMethod="#{vendaMB.autocompleteEstoque}" var="produto"
+								converter="convertProduto" itemLabel="#{produto.nome}"
+								itemValue="#{produto}" placeholder="#{msgs.produto}"
+								class="inputText btAutoComplete" forceSelection="true"
+								effect="fade" />
+
+							<h:outputText for="qtdProdEstoque" value="Qtd:"
+								styleClass="btProdQtd" />
+							<p:inputText id="qtdProdEstoque"
+								value="#{vendaMB.qtdEstoqueVenda}" size="5" class="inputText"
+								style="width: 70% !important; " />
+
+							<h:commandButton actionListener="#{vendaMB.addEstoqueVenda()}"
+								value="Add" class="btAddUpdate" update="resultTableVenda"
+								style="margin-left: 90%; width: 100%;" />
+
+						</h:panelGrid>
+
+						<p:dataTable value="#{vendaMB.listEstoqueVenda}"
+							var="estoqueVenda" resizableColumns="true" id="resultTableVenda"
+							paginator="true" paginatorPosition="bottom" rows="5"
+							reflow="true" widgetVar="estoqueTable"
+							emptyMessage="Nenhum produto adicionado!">
+
+							<p:column headerText="#{msgs.produto}" resizable="false"
+								sortBy="#{estoqueVenda.produto.nome}">
+								<h:outputText value="#{estoqueVenda.produto.nome}" />
+							</p:column>
+
+							<p:column headerText="#{msgs.estoqueQtd}">
+								<h:outputText value="#{estoqueVenda.qtdParaFecharVenda}" />
+							</p:column>
+
+							<p:column headerText="Valor Unit.">
+								<h:outputText value="#{estoqueVenda.precoVenda}" />
+							</p:column>
+
+							<p:column headerText="Valor total">
+								<h:outputText
+									value="#{estoqueVenda.precoVenda * estoqueVenda.qtdParaFecharVenda}" />
+							</p:column>
+
+							<p:column width="40" resizable="false">
+
+								<p:commandButton icon="ui-icon-trash" styleClass="btActionTable"
+									title="#{msgs.remove}" action="#{vendaMB.removeEstoqueVenda(estoqueVenda)}"
+									update="resultTableVenda">
+									<p:confirm header="Confirmação" message="Você tem certeza?"
+										icon="ui-icon-alert" />
+									
+								</p:commandButton>
+
+								<p:confirmDialog global="true" showEffect="fade"
+									hideEffect="fade">
+									<p:commandButton value="Sim" type="button"
+										styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+									<p:commandButton value="Não" type="button"
+										styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+								</p:confirmDialog>
+							</p:column>
+
+							<p:columnGroup type="footer">
+								<p:row>
+									<p:column colspan="3" style="text-align:right"
+										footerText="Total:" />
+									<p:column footerText="R$#{vendaMB.valorVendaTotal}" />	
+									<p:column/>								
+								</p:row>
+							</p:columnGroup>
+
+						</p:dataTable>
 
 					</h:panelGrid>
 
-					<h:panelGrid columns="2" class="panelCalendar" style="width: 75%;">
+					<h:panelGrid columns="2" class="panelCalendar" style="width: 75%;"
+						rendered="#{vendaMB.tipo.equals('2')}">
 
 						<h:outputText value="Valor" />
 						<p:inputText id="vendaValor" value="#{vendaMB.venda.valorTotal}"
-							size="5" class="inputText" style="width: 40% !important;"/>
+							size="5" class="inputText" style="width: 40% !important;" />
 
 					</h:panelGrid>
 

@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * @author FelipeZoize
@@ -18,10 +19,10 @@ import javax.persistence.Table;
 @Table(name="estoque")
 public class Estoque {
 	
-//	public Estoque(){
-//		this.produto = new Produto();
-//		this.produto.setVenda(false);
-//	}
+	public Estoque(){
+		this.produto = new Produto();
+		this.produto.setVenda(false);
+	}
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -41,6 +42,10 @@ public class Estoque {
 	
 	@Column(name="preco_venda")
 	private Double precoVenda;
+	
+	/**variavel para armazenar a qtd de itens do produto na hora de cadastrar uma venda**/
+	@Transient
+	private int qtdParaFecharVenda;
 	
 	public int getId() {
 		return id;
@@ -77,6 +82,12 @@ public class Estoque {
 	}
 	public void setPrecoVenda(Double precoVenda) {
 		this.precoVenda = precoVenda;
+	}
+	public int getQtdParaFecharVenda() {
+		return qtdParaFecharVenda;
+	}
+	public void setQtdParaFecharVenda(int qtdParaFecharVenda) {
+		this.qtdParaFecharVenda = qtdParaFecharVenda;
 	}
 	
 	

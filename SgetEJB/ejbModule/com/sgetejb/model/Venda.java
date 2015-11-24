@@ -29,6 +29,7 @@ public class Venda {
 	
 	public Venda(){
 		this.tipoServico = new TipoServico();
+		this.estoque = new Estoque();
 	}
 
 	@Id
